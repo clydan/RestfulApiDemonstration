@@ -32,4 +32,5 @@ Route::prefix('post')->group(function(){
 
     //other utilities
     Route::get('with-comments/{id}', 'UtilityController@postComments')->name('post-comments');
+    Route::get('with-user/{id}', 'UtilityController@userPosts')->name('post-user');
 });
