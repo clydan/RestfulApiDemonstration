@@ -7,11 +7,39 @@ use App\Models\Post;
 use App\Actions\SaveUserPost;
 use App\Actions\UpdateUserPost;
 use App\Actions\DeleteUserPost;
+use App\Repositories\PostRepository;
 
 class PostController extends Controller
 {
-    public function index($id = null){
-        return $id ? Post::find($id) : Post::all();
+
+    private $postRepository;
+
+    public function __construct(PostRepository $postRepository){
+        $this->postRepository = $postRepository;
+    }
+
+    public function index(){
+        $posts = $this->postRepository->all();
+
+        return response([
+            'posts' => $posts
+        ], 200);
+    }
+
+    public function view($id){
+        $posts = $this->postRepository->postWithComments($id);
+
+        return response([
+            'posts' => $posts
+        ], 200);
+    }
+
+    public function getUserPost($id){
+        $posts = $this->postRepository->getUserPosts($id);
+
+        return response([
+            'posts' => $posts
+        ], 200);
     }
 
     public function store(Request $request, SaveUserPost $action){
@@ -23,7 +51,7 @@ class PostController extends Controller
         }
         return response([
             'message' => 'failed'
-        ], 400);
+        ], 400); 
     }
 
     public function update(Request $request, $id){

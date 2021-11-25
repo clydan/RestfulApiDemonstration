@@ -19,10 +19,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('post')->group(function(){
-    Route::get('index/{id?}', 'PostController@index')->name('all-posts');
-    Route::post('create', 'PostController@store')->name('create-post');
-    Route::patch('update/{id}', 'PostController@update')->name('update-post');
-    Route::delete('delete/{id}', 'PostController@delete')->name('delete-post');
+    Route::get('/index', 'PostController@index')->name('all-posts');
+    Route::get('/index/{id}', 'PostController@view')->name('single-posts');
+    Route::post('/create', 'PostController@store')->name('create-post');
+    Route::patch('/update/{id}', 'PostController@update')->name('update-post');
+    Route::delete('/delete/{id}', 'PostController@delete')->name('delete-post');
+
+    //user's posts
+    Route::get('/user/{id}', 'PostController@getUserPost')->name('user-posts');
 
     //routes for comments
     Route::get('/comments/{id?}', 'CommentController@index')->name('get-all-comments');
@@ -33,4 +37,9 @@ Route::prefix('post')->group(function(){
     //other utilities
     Route::get('with-comments/{id}', 'UtilityController@postComments')->name('post-comments');
     Route::get('with-user/{id}', 'UtilityController@userPosts')->name('post-user');
+
+    //user related routes
+    // Route::prefix('user')->group(function(){
+    //     Route::get('/posts/{id}', 'PostController@getUserPost')->name('user-posts');
+    // });
 });
