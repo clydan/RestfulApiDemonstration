@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Actions\SaveUserComment;
+use App\Actions\UpdateUserComment;
+use App\Actions\DeleteUserComment;
 
 class CommentController extends Controller
 {
@@ -11,62 +14,40 @@ class CommentController extends Controller
         return $id ? Comment::find($id) : Comment::all();
     }
 
-    public function store(Request $request){
-        $data = request()->validate([
-            'body' => 'required'
-        ]);
+    public function store(Request $request, SaveUserComment $action){
 
-        if($data){
-            Comment::create([
-                'body' => request('body'),
-                //i will be passing the userId and postId long
-                'user_id' => request('user_id'),
-                'post_id' => request('post_id')
-            ]);
-
-            return response([
-                'message' => 'comment created successfully'
-            ], 200);
-        }
-
-        return response([
-            'message' => 'Unsuccessful post'
-        ], 404);
-    }
-
-    public function update(Request $request, $id){
-        $data = request()->validate([
-            'body' => 'required'
-        ]);
-
-        if($data){
-            Comment::where('id', $id)->update($data);
-
-            return response([
-                'message' => 'comment updated'
-            ], 200);
-        }
-        return response([
-            'message' => 'Error updating comment'
-        ], 404);
-
-
-    }
-
-    public function delete($id){
-        $comment = Comment::find($id);
-
+        $comment = $action->handle($request);
         if($comment){
-            $comment->delete();
-
             return response([
-                'message' => 'comment deleted'
+                'message' => 'success'
             ], 200);
         }
         return response([
-            'message' => 'comment not found'
-        ], 404);
+            'message' => 'failed'
+        ], 400);
+    }
 
-        
+    public function update(Request $request, $id, UpdateUserComment $action){
+        $comment = $action->handle($request, $id);
+        if($comment){
+            return response([
+                'message' => 'success'
+            ], 200);
+        }
+        return response([
+            'message' => 'failed'
+        ], 400);
+    }
+
+    public function delete($id, DeleteUserComment $action){
+        $comment = $action->handle($id);
+        if($comment){
+            return response([
+                'message' => 'success'
+            ], 200);
+        }
+        return response([
+            'message' => 'failed'
+        ], 400);
     }
 }

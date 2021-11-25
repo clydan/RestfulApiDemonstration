@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Actions\SaveUserPost;
+use App\Actions\UpdateUserPost;
+use App\Actions\DeleteUserPost;
 
 class PostController extends Controller
 {
@@ -11,63 +14,39 @@ class PostController extends Controller
         return $id ? Post::find($id) : Post::all();
     }
 
-    public function store(Request $request){
-        $data = request()->validate([
-            'title' => 'required',
-            'body' => 'required'
-        ]);
-
-        if($data){
-            Post::create([
-                'body' => request('body'),
-                'title' => request('title'),
-                'user_id' => request('user_id'),
-            ]);
-
+    public function store(Request $request, SaveUserPost $action){
+        $post = $action->handle($request);
+        if($post){
             return response([
-                'message' => 'Post created successfully'
+                'message' => 'success'
             ], 200);
         }
-
         return response([
-            'message' => 'Unsuccessful post'
-        ], 404);
+            'message' => 'failed'
+        ], 400);
     }
 
     public function update(Request $request, $id){
-        $data = request()->validate([
-            'title' => 'required|sometimes',
-            'body' => 'required|sometimes'
-        ]);
-
-        if($data){
-            Post::where('id', $id)->update($data);
-
+        $post = $action->handle($request, $id);
+        if($post){
             return response([
-                'message' => 'Post updated'
+                'message' => 'success'
             ], 200);
         }
         return response([
-            'message' => 'Error updating Post'
-        ], 404);
-
-
+            'message' => 'failed'
+        ], 400);
     }
 
     public function delete($id){
-        $post = Post::find($id);
-
+        $post = $action->handle($id);
         if($post){
-            $post->delete();
-
             return response([
-                'message' => 'Post deleted'
+                'message' => 'success'
             ], 200);
         }
         return response([
-            'message' => 'Postt not found'
-        ], 404);
-
-        
+            'message' => 'failed'
+        ], 400);
     }
 }
