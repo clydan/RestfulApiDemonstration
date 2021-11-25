@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Interfaces\PostRepositoryInterface;
 use App\Models\Post;
 use App\Actions\SaveUserPost;
 use App\Actions\UpdateUserPost;
@@ -12,9 +13,9 @@ use App\Repositories\PostRepository;
 class PostController extends Controller
 {
 
-    private $postRepository;
+    private PostRepositoryInterface $postRepository;
 
-    public function __construct(PostRepository $postRepository){
+    public function __construct(PostRepositoryInterface $postRepository){
         $this->postRepository = $postRepository;
     }
 

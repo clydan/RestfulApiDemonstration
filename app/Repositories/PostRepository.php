@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Repositories;
+use App\Interfaces\PostRepositoryInterface;
 use App\Models\Post;
 use App\Models\Comments;
 use App\Models\User;
 
-class PostRepository{
+class PostRepository implements PostRepositoryInterface{
     public function all(){
         return Post::orderBy('title')
         ->get();
