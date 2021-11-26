@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Interfaces\CommentRepositoryInterface;
 use App\Models\Comment;
-use App\Actions\SaveUserComment;
-use App\Actions\UpdateUserComment;
-use App\Actions\DeleteUserComment;
+use App\Repositories\CommentRepository;
 
 class CommentController extends Controller
 {
-    public function index($id = null){
-        return $id ? Comment::find($id) : Comment::all();
+
+    private CommentRepositoryInterface $commentRepository;
+
+    public function __construct(CommentRepositoryInterface $commentRepository){
+        $this->commentRepository = $commentRepository;
+    }
+    public function index(){
+        $comments = $this->commentRepository();
+        return response([
+            'comments' => $comment,
+        ], 200);
     }
 
-    public function store(Request $request, SaveUserComment $action){
+    public function store(Request $request){
 
-        $comment = $action->handle($request);
+        $comment = $this->commentRepository->commentSave($request);
         if($comment){
             return response([
                 'message' => 'success'
@@ -27,8 +35,8 @@ class CommentController extends Controller
         ], 400);
     }
 
-    public function update(Request $request, $id, UpdateUserComment $action){
-        $comment = $action->handle($request, $id);
+    public function update(Request $request, $id){
+        $comment = $this->commentRepository->commentUpdate($request, $id);
         if($comment){
             return response([
                 'message' => 'success'
@@ -39,8 +47,8 @@ class CommentController extends Controller
         ], 400);
     }
 
-    public function delete($id, DeleteUserComment $action){
-        $comment = $action->handle($id);
+    public function delete($id){
+        $comment = $this->commentRepository->commentDelete($id);
         if($comment){
             return response([
                 'message' => 'success'
