@@ -37,4 +37,45 @@ class PostRepository implements PostRepositoryInterface{
             ];
         }
     }
+
+    public function savePost($request){
+        $data = request()->validate([
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+        if($data){
+            Post::create([
+                'body' => request('body'),
+                'title' => request('title'),
+                'user_id' => request('user_id'),
+            ]);
+            return true;
+        }
+        return false;
+    }
+
+    public function deletePost($id){
+        $post = Post::find($id);
+
+        if($post){
+            $post->delete();
+
+            return true;
+        }
+        return false;
+    }
+
+    public function updatePost($request, $id){
+        $data = request()->validate([
+            'title' => 'sometimes',
+            'body' => 'sometimes'
+        ]);
+
+        if($data){
+            Post::where('id', $id)->update($data);
+
+            return true;
+        }
+        return false;
+    }
 }

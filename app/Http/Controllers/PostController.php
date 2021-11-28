@@ -43,8 +43,8 @@ class PostController extends Controller
         ], 200);
     }
 
-    public function store(Request $request, SaveUserPost $action){
-        $post = $action->handle($request);
+    public function store(Request $request){
+        $post = $this->postRepository->savePost($request);
         if($post){
             return response([
                 'message' => 'success'
@@ -56,7 +56,7 @@ class PostController extends Controller
     }
 
     public function update(Request $request, $id){
-        $post = $action->handle($request, $id);
+        $post = $this->postRepository->updatePost($request, $id);
         if($post){
             return response([
                 'message' => 'success'
@@ -68,7 +68,7 @@ class PostController extends Controller
     }
 
     public function delete($id){
-        $post = $action->handle($id);
+        $post = $this->postRepository->deletePost($id);
         if($post){
             return response([
                 'message' => 'success'
