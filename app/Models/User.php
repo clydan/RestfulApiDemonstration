@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function comments(){
         return $this->hasMany('App\Models\Comment');
     }
+
+    public function ads(){
+        return $this->hasMany('App\Models\Ad');
+    }
 }
