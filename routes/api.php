@@ -34,6 +34,10 @@ Route::prefix('post')->group(function(){
     Route::patch('/comment/update/{id}', 'CommentController@update')->name('update-comment');
     Route::delete('/comment/delete/{id}', 'CommentController@delete')->name('delete-comment');
 
+    //Announcements or Ads routes
+    Route::get('/ad/{ad}', 'AdController@view')->name('ad-view');
+    Route::get('/ad', 'AdController@index')->name('ad-index');
+
     //other utilities
     Route::get('with-comments/{id}', 'UtilityController@postComments')->name('post-comments');
     Route::get('with-user/{id}', 'UtilityController@userPosts')->name('post-user');
