@@ -8,7 +8,7 @@ class DeleteUserComment{
     public function handle($id){
         $thisComment = Comment::find($id);
         if($thisComment){
-            $comment->delete();
+            $thisComment->delete();
 
             return true;
         }

@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Actions\SaveUserPost;
 use App\Actions\GetUserPosts;
-use App\Actions\AllPosts;
+use App\Actions\AllPost;
 use App\Actions\UpdateUserPost;
 use App\Actions\DeleteUserPost;
 use App\Actions\PostWithComments;
 
 class PostController extends Controller
 {
-   public function index(AllPosts $action){
+   public function index(AllPost $action){
         $posts = $action->handle();
 
         return response([
